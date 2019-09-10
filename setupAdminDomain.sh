@@ -68,12 +68,12 @@ function downloadJDK()
 
    for in in {1..5}
    do
-     curl -s https://raw.githubusercontent.com/typekpb/oradown/master/oradown.sh  | bash -s -- --cookie=accept-weblogicserver-server --username="${otnusername}" --password="${otnpassword}" https://download.oracle.com/otn/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
-     tar -tzf jdk-8u131-linux-x64.tar.gz 
+     curl -s https://raw.githubusercontent.com/typekpb/oradown/master/oradown.sh  | bash -s -- --cookie=accept-weblogicserver-server --username="${otnusername}" --password="${otnpassword}" https://download.oracle.com/otn/java/jdk/8u221-b11/230deb18db3e4014bb8e3e8324f81b43/jdk-8u221-linux-x64.tar.gz
+     tar -tzf jdk-8u221-linux-x64.tar.gz
      if [ $? != 0 ];
      then
         echo "Download failed. Trying again..."
-        rm -f jdk-8u131-linux-x64.tar.gz
+        rm -f jdk-8u221-linux-x64.tar.gz
      else 
         echo "Downloaded JDK successfully"
         break
@@ -83,13 +83,13 @@ function downloadJDK()
 
 function setupJDK()
 {
-    sudo cp $BASE_DIR/jdk-8u131-linux-x64.tar.gz $JDK_PATH/jdk-8u131-linux-x64.tar.gz
+    sudo cp $BASE_DIR/jdk-8u221-linux-x64.tar.gz $JDK_PATH/jdk-8u221-linux-x64.tar.gz
 
     echo "extracting and setting up jdk..."
-    sudo tar -zxvf $JDK_PATH/jdk-8u131-linux-x64.tar.gz --directory $JDK_PATH
+    sudo tar -zxvf $JDK_PATH/jdk-8u221-linux-x64.tar.gz --directory $JDK_PATH
     sudo chown -R $username:$groupname $JDK_PATH
 
-    export JAVA_HOME=$JDK_PATH/jdk1.8.0_131
+    export JAVA_HOME=$JDK_PATH/jdk1.8.0_221
     export PATH=$JAVA_HOME/bin:$PATH
 
     java -version
@@ -149,12 +149,12 @@ function downloadWLS()
 
 function validateJDKZipCheckSum()
 {
-  jdkZipFile="$BASE_DIR/jdk-8u131-linux-x64.tar.gz"
-  jdk18u131Sha256Checksum="62b215bdfb48bace523723cdbb2157c665e6a25429c73828a32f00e587301236"
+  jdkZipFile="$BASE_DIR/jdk-8u221-linux-x64.tar.gz"
+  jdk18u221Sha256Checksum="bac52b7f120a03c4c0815ca8fc77c02a8f3db2ded121ffad7449525f377e2479"
 
   downloadedJDKZipCheckSum=$(sha256sum $jdkZipFile | cut -d ' ' -f 1)
 
-  if [ "${jdk18u131Sha256Checksum}" == "${downloadedJDKZipCheckSum}" ];
+  if [ "${jdk18u221Sha256Checksum}" == "${downloadedJDKZipCheckSum}" ];
   then
     echo "Checksum match successful. Proceeding with Weblogic Install Kit Zip Download from OTN..."
   else
@@ -169,10 +169,10 @@ function cleanup()
 {
     echo "Cleaning up temporary files..."
 	
-    rm -f $BASE_DIR/jdk-8u131-linux-x64.tar.gz
+    rm -f $BASE_DIR/jdk-8u221-linux-x64.tar.gz
     rm -f $BASE_DIR/fmw_12.2.1.3.0_wls_Disk1_1of1.zip
 	
-    rm -rf $JDK_PATH/jdk-8u131-linux-x64.tar.gz
+    rm -rf $JDK_PATH/jdk-8u221-linux-x64.tar.gz
     rm -rf $WLS_PATH/fmw_12.2.1.3.0_wls_Disk1_1of1.zip
     
     rm -rf $WLS_PATH/silent-template
@@ -352,7 +352,7 @@ function create_adminDomain()
     sudo unzip -o weblogic-deploy.zip -d $DOMAIN_PATH
     create_admin_model
     sudo chown -R $username:$groupname $DOMAIN_PATH
-    runuser -l oracle -c "export JAVA_HOME=$JDK_PATH/jdk1.8.0_131 ; $DOMAIN_PATH/weblogic-deploy/bin/createDomain.sh -oracle_home $INSTALL_PATH/Oracle/Middleware/Oracle_Home -domain_parent $DOMAIN_PATH  -domain_type WLS -model_file $DOMAIN_PATH/admin-domain.yaml" 
+    runuser -l oracle -c "export JAVA_HOME=$JDK_PATH/jdk1.8.0_221; $DOMAIN_PATH/weblogic-deploy/bin/createDomain.sh -oracle_home $INSTALL_PATH/Oracle/Middleware/Oracle_Home -domain_parent $DOMAIN_PATH  -domain_type WLS -model_file $DOMAIN_PATH/admin-domain.yaml" 
     if [[ $? != 0 ]]; then
        echo "Error : Domain creation failed"
        exit 1
@@ -431,7 +431,7 @@ function deploy_sampleApp()
 	wget -q $samplApp
 	sudo unzip -o shoppingcart.zip -d $DOMAIN_PATH
 	sudo chown -R $username:$groupname $DOMAIN_PATH/shoppingcart.*
-	runuser -l oracle -c "export JAVA_HOME=$JDK_PATH/jdk1.8.0_131 ;  $DOMAIN_PATH/weblogic-deploy/bin/deployApps.sh -oracle_home $INSTALL_PATH/Oracle/Middleware/Oracle_Home -archive_file $DOMAIN_PATH/shoppingcart.war -domain_home $DOMAIN_PATH/$wlsDomainName -model_file  $DOMAIN_PATH/deploy-app.yaml"
+	runuser -l oracle -c "export JAVA_HOME=$JDK_PATH/jdk1.8.0_221;  $DOMAIN_PATH/weblogic-deploy/bin/deployApps.sh -oracle_home $INSTALL_PATH/Oracle/Middleware/Oracle_Home -archive_file $DOMAIN_PATH/shoppingcart.war -domain_home $DOMAIN_PATH/$wlsDomainName -model_file  $DOMAIN_PATH/deploy-app.yaml"
 	if [[ $? != 0 ]]; then
        echo "Error : Deploying application failed"
        exit 1

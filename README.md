@@ -31,7 +31,7 @@ So, when this template is run, user will be required to accept the <a href="http
 
 *New-AzResourceGroup -Name &lt;resource-group-name&gt; -Location &lt;resource-group-location&gt; 
 
-*New-AzResourceGroupDeployment -ResourceGroupName &lt;resource-group-name&gt; -TemplateUri https://raw.githubusercontent.com/wls-eng/arm-oraclelinux-wls-admin/master/admindeploy.json*
+*New-AzResourceGroupDeployment -ResourceGroupName &lt;resource-group-name&gt; -TemplateUri https://raw.githubusercontent.com/FengLiqiong/arm-oraclelinux-wls-admin/develop/admindeploy.json*
 
 **Command line**
 
@@ -39,7 +39,7 @@ So, when this template is run, user will be required to accept the <a href="http
 
 *az group create --name &lt;resource-group-name&gt; --location &lt;resource-group-location&gt;
 
-*az group deployment create --resource-group &lt;resource-group-name&gt; --template-uri https://raw.githubusercontent.com/wls-eng/arm-oraclelinux-wls-admin/master/admindeploy.json*
+*az group deployment create --resource-group &lt;resource-group-name&gt; --template-uri https://raw.githubusercontent.com/FengLiqiong/arm-oraclelinux-wls-admin/develop/admindeploy.json*
 
 **Weblogic Admin Domain Setup**
 <p> 1. Weblogic domain created is available under /u01/domains/{domain name}
